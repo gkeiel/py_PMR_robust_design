@@ -100,31 +100,39 @@ def simulate(cl_tf, id_tf, V, R, f, fs=10000, Tf=0.2, st=0.04):
     I_7  = 0.35*(V/R)
     I_9  = 0.12*(V/R)
     I_11 = 0.04*(V/R)
+    I_13 = 0.08*(V/R)
+    I_15 = 0.07*(V/R)
     i1   =  I_1*np.sqrt(2)*np.sin(2*math.pi*f*t)
-    i3   = -I_3*np.sqrt(2)*np.sin(3*2*math.pi*f*t)
-    i5   =  I_5*np.sqrt(2)*np.sin(5*2*math.pi*f*t)
-    i7   = -I_7*np.sqrt(2)*np.sin(7*2*math.pi*f*t)
-    i9   =  I_9*np.sqrt(2)*np.sin(9*2*math.pi*f*t)
-    i11  = -I_11*np.sqrt(2)*np.sin(11*2*math.pi*f*t)
+    i3   =  I_3*np.sqrt(2)*np.sin(3*2*math.pi*f*t -math.pi*100/180)
+    i5   =  I_5*np.sqrt(2)*np.sin(5*2*math.pi*f*t +math.pi*175/180)
+    i7   =  I_7*np.sqrt(2)*np.sin(7*2*math.pi*f*t -math.pi*55/180)
+    i9   =  I_9*np.sqrt(2)*np.sin(9*2*math.pi*f*t -math.pi*127/180)
+    i11  =  I_11*np.sqrt(2)*np.sin(11*2*math.pi*f*t -math.pi*119.5/180)
+    i13  =  I_13*np.sqrt(2)*np.sin(13*2*math.pi*f*t)
+    i15  =  -I_15*np.sqrt(2)*np.sin(15*2*math.pi*f*t)
     i1[t < st] = 0
     i3[t < st] = 0
     i5[t < st] = 0
     i7[t < st] = 0
     i9[t < st] = 0
     i11[t < st] = 0
+    i13[t < st] = 0
+    i15[t < st] = 0
     t, y3, x = signal.lsim((id_tf.num[0][0],id_tf.den[0][0]), i3, t)
     t, y5, x = signal.lsim((id_tf.num[0][0],id_tf.den[0][0]), i5, t)
     t, y7, x = signal.lsim((id_tf.num[0][0],id_tf.den[0][0]), i7, t)
     t, y9, x = signal.lsim((id_tf.num[0][0],id_tf.den[0][0]), i9, t)
     t, y11, x = signal.lsim((id_tf.num[0][0],id_tf.den[0][0]), i11, t)
+    t, y13, x = signal.lsim((id_tf.num[0][0],id_tf.den[0][0]), i13, t)
+    t, y15, x = signal.lsim((id_tf.num[0][0],id_tf.den[0][0]), i15, t)
 
     # output voltage and current for linear load
     v_o = y1
     i_o = i1
 
     # output voltage and current for non-linear load
-    v_o_nl = y1 +y3 +y5 +y7 +y9 +y11
-    i_o_nl = i1 +i3 +i5 +i7 +i9 +i11
+    v_o_nl = y1 +y3 +y5 +y7 +y9 +y11 +y13 +y15
+    i_o_nl = i1 +i3 +i5 +i7 +i9 +i11 +i13 +i15
 
     return t, r, v_o, i_o, v_o_nl, i_o_nl
 
